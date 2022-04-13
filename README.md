@@ -6,6 +6,6 @@
 Vue Decolorization
 </h1>
 
-<div>
+<div align="center">
 <a href="https://decolorization.elonehoo.xyz/">Live Demo</a>
 </div>
