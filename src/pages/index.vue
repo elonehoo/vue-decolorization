@@ -106,14 +106,14 @@ init()
 <template>
   <div class="color-container">
     <div class="size-wrap">
-      <div>选择关卡</div>
+      <div>Choose a level</div>
       <div @click="selectSize(size * 10)" :class="'size-' + (size + 1)" v-for="size in 5" :key="size">{{size}}</div>
     </div>
 
     <div class="step-wrap">
-      <div>当前关卡</div>
+      <div>current level</div>
       <div class="step">{{blockCount / 10}}</div>
-      <div>剩余步数</div>
+      <div>steps</div>
       <div class="step">{{step}}</div>
     </div>
 
@@ -127,18 +127,18 @@ init()
     </div>
 
     <div class="rule-wrap">
-      <div>游戏规则：</div>
-      <div>点击下方色块，以左上角为原点，逐步吞噬相邻颜色，直到所有颜色统一</div>
+      <div>game rules:</div>
+      <div>Click the color block below, take the upper left corner as the origin, and gradually swallow the adjacent colors until all the colors are unified</div>
     </div>
 
     <div v-show="isSuccess" class="success-panel">
-      <div class="success-text">闯关成功</div>
-      <span @click="nextPass" class="next-pass">下一关</span>
+      <div class="success-text">Successfully</div>
+      <span @click="nextPass" class="next-pass">Next</span>
     </div>
 
     <div v-show="isOver" class="over-panel">
-      <div class="over-text">游戏结束</div>
-      <span @click="init" class="restart">重新开始</span>
+      <div class="over-text">Game Over</div>
+      <span @click="init" class="restart">Again</span>
     </div>
   </div>
 </template>
