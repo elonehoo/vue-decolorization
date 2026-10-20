@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ref} from 'vue'
 import _ from 'underscore'
+import { ref } from 'vue'
 
 const isOver = ref(false)
 const isSuccess = ref(false)
@@ -11,12 +11,11 @@ const blockColors = ref()
 const selectedColor = ref()
 const needCleanBlock = ref()
 
-function blockSize(){
-   return (1 / blockCount.value) * 100 + '%'
+function blockSize() {
+  return `${(1 / blockCount.value) * 100}%`
 }
 
-
-function clearBlock(color:any){
+function clearBlock(color: any) {
   if (color === blockColors.value[0]) {
     return
   }
@@ -26,8 +25,8 @@ function clearBlock(color:any){
   changeSelectColor()
 }
 
-function changeSelectColor(){
-  var blockColors2 = Object.assign({}, blockColors.value)
+function changeSelectColor() {
+  const blockColors2 = Object.assign({}, blockColors.value)
   for (const key of needCleanBlock.value) {
     blockColors2[key] = selectedColor.value
   }
@@ -35,13 +34,13 @@ function changeSelectColor(){
   checkGameStatus()
 }
 
-function getNeedCleanBlock(index:any){
+function getNeedCleanBlock(index: any) {
   needCleanBlock.value = [index]
-  let blockStark = [index]
+  const blockStark = [index]
   do {
-    let surroundBlocks = getSurroundBlock(blockStark.pop())
-    for (let blockIndex of surroundBlocks) {
-      if (_.indexOf(needCleanBlock.value, blockIndex) === -1) {
+    const surroundBlocks = getSurroundBlock(blockStark.pop())
+    for (const blockIndex of surroundBlocks) {
+      if (!_.includes(needCleanBlock.value, blockIndex)) {
         needCleanBlock.value.push(blockIndex)
         blockStark.push(blockIndex)
       }
@@ -49,32 +48,32 @@ function getNeedCleanBlock(index:any){
   } while (blockStark.length > 0)
 }
 
-function getSurroundBlock(index:any){
-  let color = blockColors.value[index]
-  let surroundBlock = []
+function getSurroundBlock(index: any) {
+  const color = blockColors.value[index]
+  const surroundBlock = []
 
-  if (index % blockCount.value !== blockCount.value - 1 && _.indexOf(needCleanBlock.value, index + 1) === -1 && color === blockColors.value[index + 1]) {
+  if (index % blockCount.value !== blockCount.value - 1 && !_.includes(needCleanBlock.value, index + 1) && color === blockColors.value[index + 1]) {
     surroundBlock.push(index + 1)
   }
-  if (index % blockCount.value !== 0 && _.indexOf(needCleanBlock.value, index - 1) === -1 && color === blockColors.value[index - 1]) {
-        surroundBlock.push(index - 1)
+  if (index % blockCount.value !== 0 && !_.includes(needCleanBlock.value, index - 1) && color === blockColors.value[index - 1]) {
+    surroundBlock.push(index - 1)
   }
-  if (_.indexOf(needCleanBlock.value, index + blockCount.value) === -1 && color === blockColors.value[index + blockCount.value]) {
-        surroundBlock.push(index + blockCount.value)
+  if (!_.includes(needCleanBlock.value, index + blockCount.value) && color === blockColors.value[index + blockCount.value]) {
+    surroundBlock.push(index + blockCount.value)
   }
-  if (_.indexOf(needCleanBlock.value, index - blockCount.value) === -1 && color === blockColors.value[index - blockCount.value]) {
-        surroundBlock.push(index - blockCount.value)
+  if (!_.includes(needCleanBlock.value, index - blockCount.value) && color === blockColors.value[index - blockCount.value]) {
+    surroundBlock.push(index - blockCount.value)
   }
   return surroundBlock
 }
 
-function selectSize (size:any) {
+function selectSize(size: any) {
   blockCount.value = size
   init()
 }
 
-function checkGameStatus () {
-  let colors = _.groupBy(blockColors.value)
+function checkGameStatus() {
+  const colors = _.groupBy(blockColors.value)
   if (_.size(colors) === 1) {
     isSuccess.value = true
     return
@@ -84,15 +83,15 @@ function checkGameStatus () {
   }
 }
 
-function nextPass () {
+function nextPass() {
   selectSize(blockCount.value + 10)
 }
 
-function init () {
+function init() {
   isOver.value = false
   isSuccess.value = false
   step.value = blockCount.value * 1.2
-  let blockColors2 = []
+  const blockColors2 = []
   for (let w = 0; w <= blockCount.value * blockCount.value; w++) {
     blockColors2[w] = _.sample(colors.value)
   }
@@ -100,30 +99,35 @@ function init () {
 }
 
 init()
-
 </script>
 
 <template>
   <div class="color-container">
     <div class="size-wrap">
       <div>Choose a level</div>
-      <div @click="selectSize(size * 10)" :class="'size-' + (size + 1)" v-for="size in 5" :key="size">{{size}}</div>
+      <div v-for="size in 5" :key="size" :class="`size-${size + 1}`" @click="selectSize(size * 10)">
+        {{ size }}
+      </div>
     </div>
 
     <div class="step-wrap">
       <div>current level</div>
-      <div class="step">{{blockCount / 10}}</div>
+      <div class="step">
+        {{ blockCount / 10 }}
+      </div>
       <div>steps</div>
-      <div class="step">{{step}}</div>
+      <div class="step">
+        {{ step }}
+      </div>
     </div>
 
     <div class="game-panel">
-      <div v-for="(index, col) in (blockCount * blockCount)" :key="col" :style="{'width': blockSize(),'height':blockSize()}">
-        <div class="col-item" :class="blockColors[index - 1]"></div>
+      <div v-for="(index, col) in (blockCount * blockCount)" :key="col" :style="{ width: blockSize(), height: blockSize() }">
+        <div class="col-item" :class="blockColors[index - 1]" />
       </div>
     </div>
     <div class="color-btn-wrap">
-      <div v-for="color in colors" :key="color" class="color-btn" :class="color" @click="clearBlock(color)"></div>
+      <div v-for="color in colors" :key="color" class="color-btn" :class="color" @click="clearBlock(color)" />
     </div>
 
     <div class="rule-wrap">
@@ -132,13 +136,17 @@ init()
     </div>
 
     <div v-show="isSuccess" class="success-panel">
-      <div class="success-text">Successfully</div>
-      <span @click="nextPass" class="next-pass">Next</span>
+      <div class="success-text">
+        Successfully
+      </div>
+      <span class="next-pass" @click="nextPass">Next</span>
     </div>
 
     <div v-show="isOver" class="over-panel">
-      <div class="over-text">Game Over</div>
-      <span @click="init" class="restart">Again</span>
+      <div class="over-text">
+        Game Over
+      </div>
+      <span class="restart" @click="init">Again</span>
     </div>
   </div>
 </template>
